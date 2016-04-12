@@ -1,99 +1,92 @@
-# Sprint 2
+## Sprint 2 Overview
+This sprint we will:  
+- `GET` data from our back-end to our Angular front-end with `$http`  
+- `POST` data from a form to save Albums into our database
 
-## Overview
-
+<<<<<<< HEAD
 This sprint we will:
-* focus on **Create**
-* build a form to save Albums into our database
-* add a `.post` method to our server so that it can receive the form's data
+* `GET` data from our back-end to our Angular front-end with `$http`
+* `POST` data from a form to save Albums into our database
 
-> Note: as we go through this if you get stuck make use of the hints, your neighbors and the solutions.
+1. let's get some real data to our client.
+1. all of Angular is not loaded in every module, controller, and template. Instead, you have to include or "inject" the parts of angular or external angular modules into the parts of your app where you want to use them.
+1. to use `$http`, we first need to tell angular that we'd like to have it available in our controller by `inject`ing it. to do that, include this line above the controller function definition
+=======
+1. We wil add real data to our client.
+1. Remove the `vm.albums` hard-coded data in `app.js`
+1. All of Angular is not loaded in every module, controller, and template. Instead, you have to include or "inject" the parts of angular or external angular modules into the parts of your app where you want to use them.
+1. To use `$http`, we first need to tell angular that we'd like to have it available in our controller by `inject`ing it. to do that, include this line above the controller function definition
+>>>>>>> ec59cc44348eddb2b4d8f60441c7d5306f507301
 
-> You must complete all of the previous sprint before starting this sprint. (excludes stretch challenges)
+  ```javascript
+  AlbumsIndexController.$inject = ['$http'];
 
-## Step 1:
+  function AlbumsIndexController ($http) {
+    ...
+  }
+  ```
+<<<<<<< HEAD
+The first line tells the controller that we'd like to have access to the `$http` module and the second line passes `$http` into the controller function
+=======
+The first line tells the controller that we'd like to have access to the `$http` module. The second line passes `$http` into the controller function.
+>>>>>>> ec59cc44348eddb2b4d8f60441c7d5306f507301
 
-1. Open `views/index.html`
+## `GET` the data.
+1. Delete the hard-coded `vm.album` data from the previous sprint.
+1. Use Angular's `$http` `GET` method to get data from the back-end. Make sure your back-end is populated with data. If not, run `node seed.js` to populate with pre-made data. `$http` looks very similar to jQuery's `$.ajax` with some small key differences. Copy this code into your `AlbumsIndexController` function:
 
-1. Edit the file adding a new container and row after the jumbotron.
+  ```js
+	  $http({
+	    method: 'GET',
+	    url: // what goes here?
+	  }).then(function successCallback(response) {
+	    vm.albums = response.data;
+	  }, function errorCallback(response) {
+	    console.log('There was an error getting the data', response);
+	  });
+  ```
 
-1. Use bootstrap to create a form to input your Album info.  Follow the fields we've already used in our database.
-
-> Hint: You can build your own form or use some [pre-made html](/docs/code_samples/sprint2_form.html).
-
-
-## Step 2:
-
-1. Edit your `app.js`. Use jQuery to capture the form values and serialize them.  `console.log` the output.
-
-sample serialized form data:
-
-```js
-name=Marble+House&textinput=The+Knife&releaseDate=2006&genres=electronica%2C+synth+pop%2C+trip+hop
-```
-
-1. Clear the form after getting the data.
-
-## Step 3:
-
-Let's add a post route on the server now.  We already know that POST is used to create a new resource.  If we're following good conventions we'll use the same URL that we did to retrieve all the albums.
-
-```
-POST  /api/albums
-```
-
-1. In `server.js`, after the current `GET /api/albums` add a new route.  Create the appropriate function (`function create`) in your albums controller.  Start by just `console.log`ing the output and returning the same data you received as json.
-
-  > Don't forget to export the `create` function from the controller or it won't be accessible in `server.js`.
-
-1. Add body-parser to the server.
-
-1. You can test this by either using AJAX from your browser's javascript console, or by using curl or postman.
-
-curl:
-```bash
- curl -X POST http://localhost:3000/api/albums --data "name=Marble+House&textinput=The+Knife&releaseDate=2006&genres=electronica%2C+synth+pop%2C+trip+hop"
-```
-
-> Hint: If using postman to POST set the BODY type to x-www-form-urlencoded, then set key-value pairs.
+1. Now reload your page...
 
 
+![img](./assets/images/sprint2-get.gif)
 
 
-## Step 4:
+**Holy Guacamolé!** The page is populated with data from the server! **How amazing!**
 
-1. In the client-side JS, setup your form handler to make an AJAX post with the data.
+## `POST` some data
+1. Let's flesh out the `newAlbum` form. Create a form that has fields for Album Name and Artist Name; optionally Genres (separated by commas) and Release Date.
+1. Angular allows us to call functions from our `html`!  In `<form>`, let's add a `submit` handler like so
 
-1. Verify it's getting logged by the server when you submit.
+  ```html
+  <form data-ng-submit="albumsIndexCtrl.createAlbum()">
+  ```
+Don't forget to have a button with `type="submit"` in the form!
+1. `data-ng-submit` tells the `html` to call the `createAlbum()` function in the `albumsIndexCtrl` on submit of the function. Lastly we need to make a `createAlbum()` function.
 
-1. On the server-side break the data we're getting in the `genre` field into an array.
+  ```js
+  vm.createAlbum = function () {
+    $http({
+      method: 'POST',
+      url: '/api/albums',
+      data: // what goes here?
+    }).then(function successCallback(response) {
+      // how do we add the response data to our albums array?
+    }, function errorCallback(response) {
+      console.log('There was an error posting the data', response);
+    });
+  }
+  ```
+# 4.  KABMLAM!! our page is posting!
 
-> Hint: the `split` method may be handy here.
+![img](./assets/images/sprint2-post.gif)
 
-## Step 5:
+<<<<<<< HEAD
+## stretch challenges
+1. change the form, replacing the textarea for genre with a field that has a button to add a new field for each genre. See the mockup:
+=======
+## Stretch challenges
+1. Change the form by replacing the textarea for genre with a field that has a button to add a new field for each genre. See the mockup:
+>>>>>>> ec59cc44348eddb2b4d8f60441c7d5306f507301
 
-1. Connect the POST route to the database.  Make sure you're returning the new album.
-
-1. Test it!
-
-> Hint: if you get stuck here take a look at the solutions.
-
-## Step 6:
-
-1. When your server returns JSON, display it on the page.  We already have a function to render it!
-
-1. TEST ALL THE THINGS
-
-![Test all the things](http://www.daedtech.com/wp-content/uploads/2012/12/TestAllTheThings-300x225.jpg)
-
-## Stretch Challenges
-
-1. Add HTML5 form validations to the form.  Ensure that all fields are filled.  
-
-1. Change the form, replacing the textarea for genre with a field that has a button to add a new field for each genre.  See the mockup:
-
-![add new field button](/docs/assets/images/add_new_field_button.png)
-
-<!-- note the above image works fine on github, but not in the editor -->
-
-1. Convert the form to a modal and add a link to the right-side of the "Albums" header to open it!
+![](assets/images/add_new_field_button.png)
